@@ -55,7 +55,7 @@ class Recipe(models.Model):
     is_public = models.BooleanField(null=True)
 
     class Meta:
-        ordering = ['-publish_date']
+        ordering = ['publish_date']
 
     def __str__(self):
         return self.author.username + ' - ' + self.name
@@ -99,6 +99,7 @@ class Rating(models.Model):
     rating = models.PositiveSmallIntegerField(default=5,validators=[MaxValueValidator(5)])
     comment_headline = models.CharField(max_length=100)
     comment_body = models.TextField()
+    date_added = models.DateField(null=True)
 
 class ShoppingCart(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)

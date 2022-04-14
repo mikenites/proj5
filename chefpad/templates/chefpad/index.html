@@ -11,6 +11,16 @@
             </div>
         </div>
     </div>
+    <div class="container" id="user-view">
+        <div class="row">
+            <h2 id="user-view-title"></h2>
+        </div>
+        <div class="row">
+            <div class="col" id="user-feed-view-port">
+            </div>
+        </div>
+    </div>
+    </div>
     <div class="container" id="view-recipe-view">
         <br />
         <div class="card w-75">
@@ -33,6 +43,51 @@
             </div>
             <div class="card-body">
                 <p class="card-text" id="recipe-view-right"></p>
+            </div>
+        </div>
+        <br />
+        <div class="card w-75" style="margin-bottom: 15px">
+            <div class="card-body">
+                <h5>Ratings</h5>
+            </div>
+        </div>
+        <div id="view-recipe-rating">
+        </div>
+        <div id="recipe-rating-form">
+            <div class="card w-75">
+                <div class="card-body">
+                    <form id="new-rating-form">
+                        <div = class="container">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-12">
+                                    <div class="form-group">
+                                        <label for="ratingTitleInput">Title</label>
+                                        <input class="form-control" id="ratingTitleInput" placeholder="Enter Rating Title">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12">
+                                    <div class="form-group">
+                                        <label for="ratingNumberInput">Rating</label>
+                                        <input class="form-control" id="ratingNumberInput" placeholder="Enter Rating (0-5)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="ratingTextArea">Review</label>
+                                        <textarea class="form-control" id="ratingTextArea" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" class="btn btn-primary" id="submit-rating-btn">Submit Rating</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -65,7 +120,7 @@
             <div class="col-md-9 col-sm-12" id="search-result-wrapper">
                 <h5>Search Results</h5>
                 <div id="search-results">
-
+                    
                 </div>
             </div>
         </div>
@@ -98,13 +153,13 @@
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group">
                                     <label for="titleInput">Title</label>
-                                    <input type="email" class="form-control" id="titleInput" placeholder="Enter Recipe Title">
+                                    <input class="form-control" id="titleInput" placeholder="Enter Recipe Title">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group">
                                     <label for="imageInput">Image URL</label>
-                                    <input type="email" class="form-control" id="imageInput" placeholder="Enter Recipe Title">
+                                    <input class="form-control" id="imageInput" placeholder="Enter Recipe Title">
                                 </div>
                             </div>
                         </div>
@@ -126,19 +181,19 @@
                             <div class="col-lg col-md-6">
                                 <div class="form-group">
                                     <label for="cookTimeInput">Cook Time</label>
-                                    <input type="email" class="form-control" id="cookTimeInput" placeholder="Enter Cook Time">
+                                    <input class="form-control" id="cookTimeInput" placeholder="Enter Cook Time">
                                 </div>
                             </div>
                             <div class="col-lg col-md-6">
                                 <div class="form-group">
                                     <label for="prepTimeInput">Prep Time</label>
-                                    <input type="email" class="form-control" id="prepTimeInput" placeholder="Enter Prep Time">
+                                    <input class="form-control" id="prepTimeInput" placeholder="Enter Prep Time">
                                 </div>
                             </div>
                             <div class="col-lg col-md-6">
                                 <div class="form-group">
                                     <label for="servingsInput">Servings</label>
-                                    <input type="email" class="form-control" id="servingsInput" placeholder="Enter Servings">
+                                    <input class="form-control" id="servingsInput" placeholder="Enter Servings">
                                 </div>
                             </div>
                         </div>

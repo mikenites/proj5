@@ -3,7 +3,14 @@ from . import views
 from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
-    path("",views.index),
+    path("", views.index, name="index"),
+    path("login", views.login_view, name="login"),
+    path("login/", views.login_view, name="login"),
+    path("logout", views.logout_view, name="logout"),
+    path("logout/", views.logout_view, name="logout"),
+    path("register", views.register, name="register"),
+    path("register/", views.register, name="register"),
+
     path("search/",views.SearchView.as_view()),
     path("search/all",views.ReturnFeedView.as_view()),
 
@@ -19,7 +26,8 @@ urlpatterns = [
     path("recipe/<int:recipe_id>/ingredient/<int:ingredient_id>",views.RecipeIngredientViewSet.as_view({'get':'retrieve','delete':'destroy','put':'update'})),
     path("recipe/<int:recipe_id>/comment",views.RatingViewSet.as_view({'get':'list','post':'create'})),
     path("recipe/<int:recipe_id>/toggle-cart",views.ToggleCart.as_view()),
-    path("recipe/submit",views.SubmitRecipeView.as_view())
-    #path("user/<int:username>"),
-    
+    path("recipe/<int:recipe_id>/rating",views.RatingsList.as_view()),
+    path("recipe/<int:recipe_id>/submit-rating",views.RatingPost.as_view()),
+    path("recipe/submit",views.SubmitRecipeView.as_view()),
+    path("user/<int:user_id>",views.UserSearchView.as_view()),
 ]

@@ -1,11 +1,16 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from django.contrib.auth import authenticate, login, logout
+from django.db import IntegrityError
+
 from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication 
-from datetime import date
-
+from datetime import date, datetime
 
 from . import models
 from . import serializers
@@ -14,6 +19,7 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
     def enforce_csrf(self, request):
         return
 
+@login_required
 def index(request):
     return render(request, "chefpad/index.html")
 
@@ -65,9 +71,6 @@ class SearchView(APIView):
         courseIdString = request.GET.get('courseId') or None
         cuisineIdString = request.GET.get('cuisineId') or None
 
-
-        print(courseIdString)
-        
         if courseIdString:
             courseIdArray = courseIdString.split(',') 
             recipes = recipes.filter(meal_course_id__in=courseIdArray)
@@ -83,13 +86,19 @@ class SearchView(APIView):
         serializer = serializers.RecipeSerializer(recipes,many=True)
         return Response(serializer.data)
 
+class UserSearchView(APIView):
+    def get(self,request,user_id):
+        recipes = models.Recipe.objects.filter(author_id = user_id)
+        serializer = serializers.RecipeSerializer(recipes,many=True)
+        print(serializer.data)
+        return Response(serializer.data)
+
 class ReturnFeedView(APIView):
     def get(self,request):
-        recipes = models.Recipe.objects.filter(is_public=True)
+        recipes = models.Recipe.objects.filter(is_public=True).order_by('-publish_date')
         serializer = serializers.RecipeSerializer(recipes,many=True)
         return Response(serializer.data)
       
-
 class CuisineList(generics.ListAPIView):
     queryset = models.Cuisine.objects.all()
     serializer_class = serializers.CuisineSerializer
@@ -112,6 +121,26 @@ class ShoppingCartRecipeView(APIView):
                 'description': recipe.recipe.description
             })
         return Response(recipeDict)
+
+class RatingsList(APIView):
+    def get(self,request,recipe_id):
+        queryset = models.Rating.objects.filter(recipe_id=recipe_id).order_by('-date_added')
+        serializedInfo = serializers.RatingSerializer(queryset,many=True)
+        return Response(serializedInfo.data)
+
+class RatingPost(APIView):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    def post(self,request,recipe_id):
+        newRating = models.Rating(
+            recipe_id = recipe_id,
+            user = request.user,
+            rating = request.data['rating'],
+            comment_headline = request.data['comment_headline'],
+            comment_body = request.data['comment_body'],
+            date_added = date.today()
+        )
+        newRating.save()
+        return Response({})
 
 class ShoppingCartView(APIView):
     def get(self,request):
@@ -207,3 +236,55 @@ class SubmitRecipeView(APIView):
             newRecipeIng.save()
 
         return Response({})
+
+
+###### Login Views from Network Project ######
+def login_view(request):
+    if request.method == "POST":
+
+        # Attempt to sign user in
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+
+        # Check if authentication successful
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "chefpad/login.html", {
+                "message": "Invalid username and/or password."
+            })
+    else:
+        return render(request, "chefpad/login.html")
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("index"))
+
+def register(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        email = request.POST["email"]
+
+        # Ensure password matches confirmation
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+        if password != confirmation:
+            return render(request, "chefpad/register.html", {
+                "message": "Passwords must match."
+            })
+
+        # Attempt to create new user
+        try:
+            user = User.objects.create_user(username, email, password)
+            user.save()
+        except IntegrityError:
+            return render(request, "chefpad/register.html", {
+                "message": "Username already taken."
+            })
+        login(request, user)
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "chefpad/register.html")

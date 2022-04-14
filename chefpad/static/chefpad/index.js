@@ -15,6 +15,7 @@ function switch_view(viewName) {
     document.querySelector('#cart-view').style.display = 'none';
     document.querySelector('#create-recipe-view').style.display = 'none';
     document.querySelector('#view-recipe-view').style.display = 'none';
+    document.querySelector('#user-view').style.display = 'none';
 
     let view = undefined;
 
@@ -45,6 +46,12 @@ function switch_view(viewName) {
         document.querySelector('#recipe-view-info').innerHTML = "";
         document.querySelector('#recipe-view-ingredients').innerHTML = "";
         document.querySelector('#recipe-view-right').innerHTML = "";
+        document.querySelector('#view-recipe-rating').innerHTML = "";
+        document.querySelector('#ratingTitleInput').value = "";
+        document.querySelector('#ratingNumberInput').value = "";
+        document.querySelector('#ratingTextArea').value = "";
+    } else if (viewName == 'user-view') {
+        view = document.querySelector('#user-view');
     }
 
     view.style.display = 'block';
@@ -82,25 +89,83 @@ function load_recipe(recipeId) {
 
         recipeViewRight.innerHTML = `
             <h5>Instructions</h5>
-            <p>${data['recipe']['instructions']}</p>
-            <button type="button" class="btn btn-secondary" id="toggle">Toggle Shopping Cart</button>
-        `;
+            <p>${data['recipe']['instructions']}</p>`;
 
-        let toggleCartBtn = document.querySelector('#toggle')
+        let toggleCartBtn = document.createElement('button');
+        toggleCartBtn.id = "toggle";
+        toggleCartBtn.className = "btn btn-secondary"
+        
+        fetch('recipe/' + data['recipe']['id'] +'/toggle-cart', {
+            method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data['inCart'] == false) {
+                toggleCartBtn.innerHTML = "Add to Cart"
+            } else {
+                toggleCartBtn.innerHTML = "Remove from Cart"
+            }
+        })
+        
+        recipeViewRight.append(toggleCartBtn)
+
         toggleCartBtn.addEventListener('click',() => {
             fetch('recipe/' + data['recipe']['id'] +'/toggle-cart', {
                 method: 'POST',
             })
             .then(response => response.json())
             .then(data => {
-                if (data['inCart'] == true) {
-                    alert("Successfully added the ingredients to your shopping cart.")
-                } else {
-                    alert("Successfully removed the ingredients from your shopping cart.")
-                }
-                load_feed()
+                load_cart()
             })
         })
+
+        fetch('recipe/' + data['recipe']['id'] +'/rating', {
+            method: 'GET',
+        }).then(response => response.json())
+        .then(data => {
+            let ratingView = document.querySelector('#view-recipe-rating')
+            let numRatings = data.length
+
+            for (let i = 0; i < data.length; i++) {
+                let ratingCard = document.createElement('div')
+                ratingCard.className = "card w-75";
+                ratingCard.style = "margin-bottom: 15px";
+                ratingCard.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${data[i]['comment_headline']}</h5>
+                        <p class="card-text">Rating: ${data[i]['rating']}/5</span></p>
+                        <p class="card-text">${data[i]['comment_body']}</p>
+                    </div>
+                `
+                ratingView.append(ratingCard)
+            }
+        })
+
+        let ratingSubBtn = document.querySelector('#submit-rating-btn');
+        ratingSubBtn.addEventListener('click',() => {
+
+            let title = document.querySelector('#ratingTitleInput').value;
+            let ratingNum = document.querySelector('#ratingNumberInput').value;
+            let comment = document.querySelector('#ratingTextArea').value;
+
+            let ratingJson = {
+                'rating':ratingNum,
+                'comment_headline':title,
+                'comment_body':comment,
+                'recipe_id':data['recipe']['id']
+            }
+
+            fetch('recipe/' + data['recipe']['id'] +'/submit-rating', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(ratingJson)
+            })
+            load_recipe(data['recipe']['id'])
+        })
+
 
     })
 }
@@ -121,6 +186,57 @@ function fetch_all(view) {
                 'id':data[i]['id'],
                 'name': data[i]['name'],
                 'author': data[i]['author_name'],
+                'author_id': data[i]['author_id'],
+                'desc': data[i]['description'],
+                'image': data[i]['image'],
+                'publishDate': data[i]['publish_date']
+            }
+            let recipeItem = generate_feed_item_html(recipeObj);
+            view.append(recipeItem);
+        }
+
+        let recipeBtns = view.querySelectorAll('.view-recipe-btn');
+        recipeBtns.forEach((recipeBtn) => {
+            recipeBtn.addEventListener('click',() => {
+                let recipeId = recipeBtn.id.split('-')[2]
+                load_recipe(recipeId)
+            })
+        })
+
+        let authorLinks = view.querySelectorAll('.view-author-link');
+
+        authorLinks.forEach((authorLink) => {
+            authorLink.addEventListener('click',() => {
+                let authorId = authorLink.id.split('-')[2]
+                let userName = authorLink.innerHTML
+                load_user_view(authorId,userName)
+            })
+        })
+    })
+}
+
+function load_user_view(userId,userName) {
+    let view = switch_view('user-view');
+    let subView = view.querySelector('#user-feed-view-port');
+    let subViewHeader = view.querySelector('#user-view-title');
+    subViewHeader.innerHTML = userName + "'s Recipes";
+    fetch_user_feed(subView,userId);
+}
+
+function fetch_user_feed(view,userId) {
+
+    fetch('/user/' + userId)
+    .then(response => response.json())
+    .then(data => {
+        
+        console.log(data)
+        for (let i = 0; i < data.length; i++) {
+            
+            let recipeObj = {
+                'id':data[i]['id'],
+                'name': data[i]['name'],
+                'author': data[i]['author_name'],
+                'author_id':data[i]['author_id'],
                 'desc': data[i]['description'],
                 'image': data[i]['image'],
                 'publishDate': data[i]['publish_date']
@@ -179,7 +295,7 @@ function generate_feed_item_html(recipeObj) {
                 <h5 class="card-title">${recipeObj['name']}</h5>
                 <p class="card-text">${recipeObj['desc']}</p>
                 <a href="#" class="btn btn-primary view-recipe-btn" id="view-recipe-${recipeObj['id']}">View Recipe</a>
-                <p class="card-text"><small class="text-muted">Written by ${recipeObj['author']} on ${recipeObj['publishDate']}</small></p
+                <p class="card-text"><small class="text-muted">Written by <a href='#' class='view-author-link' id='view-author-${recipeObj['author_id']}'>${recipeObj['author']}</a> on ${recipeObj['publishDate']}</small></p
             </div>
         </div>
     `;
@@ -467,6 +583,8 @@ function recipeSubmit() {
             },
             body: JSON.stringify(recipeJson)
         })
+
+        load_feed();
 
     })
 }

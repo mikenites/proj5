@@ -1,0 +1,41 @@
+{% extends "chefpad/layout.html" %}
+
+{% block body %}
+
+    
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-sm-12"></div>
+            <div class="col-md-6 col-sm-12">
+                <h2>Register</h2>
+                {% if message %}
+                <div>{{ message }}</div>
+                {% endif %}
+                <form action="{% url 'register' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="email" name="email" placeholder="Email Address">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Register">
+                </form>
+                Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+            </div>
+            <div class="col-md-3 col-sm-12"></div>
+        </div>
+    </div>
+{% endblock %}

@@ -21,7 +21,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Recipe
-        fields = ['id','name','author','author_name','description','image','instructions','prep_time','cook_time','servings','publish_date','is_public']
+        fields = ['id','name','author_id','author_name','description','image','instructions','prep_time','cook_time','servings','publish_date','is_public']
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,4 +36,4 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Rating
-        fields = ['id','user','recipe','rating','comment_headline','comment_body']
+        fields = ['id','user','recipe','rating','comment_headline','comment_body','date_added']
