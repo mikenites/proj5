@@ -6,12 +6,40 @@ The project is distinct in both technical and user features.
 
 First, I spent a significant amount of effort learning both Class Based Views as well as the Django Rest Framework. I utilzied both within this project. Additionally, I had to dig into the source code of the Django Rest framework to modify a viewset to allow me to identify an object given two non-primary key variables.
 
-Second, the website is significantly more dynamic than in previous projects. For example, you search via filtering by cuisine and course (e.g., breakfast or lunch) via checkboxes, similar to how you can filter down onto an Amazon web page. The admin can add and remove cuisine and course types, and the search page will dynamically pull those filters from the database. These also come into play when creating a recipe, which include dynamic select input field options for both cuisine and course types. Fourth, when "adding a recipe," the user can click a button to add additional ingredients and the DOM is updated to add these additional fields via javascript. Fifth, the shopping cart aggregates amounts of ingredients across multiple recipes that the user has saved and outputs it via a list. Finally, the core models include significantly more fields than previous projects and there are more views.
+Second, the website is significantly more dynamic than in previous projects. For example, you search via filtering by cuisine and course (e.g., breakfast or lunch) via checkboxes, similar to how you can filter down onto an Amazon web page. The admin can add and remove cuisine and course types, and the search page will dynamically pull those filters from the database. These also come into play when creating a recipe, which include dynamic select input field options for both cuisine and course types. 
+
+Third, when "adding a recipe," the user can click a button to add additional ingredients and the DOM is updated to add these additional fields via javascript. Fourth, the shopping cart aggregates amounts of ingredients across multiple recipes that the user has saved and outputs it via a list. Finally, the core models include significantly more fields than previous projects and there are more views.
+
+To make the webpage mobile responsive, I am utilizing bootstrap's javascript addons and grid layout features. 
 
 # Information in Each File
 ```
-Test code
+chefpad
+- Static \ Chefpad
+---- index.js: this includes all the javascript for the project front end
+---- style.css: empty, utilizing bootstrap with no modifications
+- templates \ chefpad
+---- index.html: Primary html page
+---- layout.html: High level structure for the page including a responsive navbar
+---- login.html: re-used Project 4's and then edited to be responsive
+---- register.html: re-used Project 4's and then edited to be responsive
+- admin.py: Registers all models onto admin panel
+- apps.py: used django defaults
+- models.py: Includes all models for the project
+- serializers.py: Includes all serializers for the project
+- tests.py: No edits
+- urls.py: Includes all URLs for the project
+- views.py: Includes all views for the project, including the re-used user views
 
+project5
+- asgi.py: No edits
+- settings.py: Edited to include rest framework and some minor settings changes related
+- urls.py: Edited to just import chefpad app urls
+- wsgi.py: No edits
+
+db.sqlite3: pre-populated database
+manage.py: default django
+requirements.txt: just utilizes django and django rest framework
 ```
 
 # How to Run the Application
