@@ -1,14 +1,16 @@
 # Overview
-Chefpad is a recipe application that is similar to "All Recipes" and the NYT Cooking application. At the highest level, users are able to post their own recipes, filter through already posted recipes, and then add all the ingredients for multiple recipes into an aggregated shopping cart of ingredients. Users can also comment and review recipes.
+Chefpad is a recipe application that is similar to "All Recipes" and the NYT Cooking application. At the highest level, users are able to post their own recipes, filter through already posted recipes, and then add all the ingredients for multiple recipes into an aggregated shopping cart of ingredients. Users can also comment and review recipes anonymously. Basic user login/register/logout pages are included.
 
 # Distinctiveness & Complexity
 The project is distinct in both technical and user features.
 
-First, I spent a significant amount of effort learning both Class Based Views as well as the Django Rest Framework. I utilzied both within this project. Additionally, I had to dig into the source code of the Django Rest framework to modify a viewset to allow me to identify an object given two non-primary key variables.
+First, I spent a significant amount of effort learning both Class Based Views as well as the Django Rest Framework. I utilized both within this project. Additionally, I had to dig into the source code of the Django Rest framework to modify a parent generic rest viewset to allow me to identify an object given two non-primary key variables.
 
-Second, the website is significantly more dynamic than in previous projects. For example, you search via filtering by cuisine and course (e.g., breakfast or lunch) via checkboxes, similar to how you can filter down onto an Amazon web page. The admin can add and remove cuisine and course types, and the search page will dynamically pull those filters from the database. These also come into play when creating a recipe, which include dynamic select input field options for both cuisine and course types. 
+Second, the website is significantly more dynamic than in previous projects. For example, you search via filtering by cuisine and course (e.g., breakfast or lunch) using checkboxes, similar to how you can filter down onto an Amazon web page. The admin can add and remove cuisine and course types, and the search page will dynamically pull those filters from the database. These also come into play when creating a recipe, which include dynamic select input field options for both cuisine and course types. By enforcing data integrity constraints onto ingredients, the app can then aggregate amounts of different ingredients across recipes (fourth feature).
 
-Third, when "adding a recipe," the user can click a button to add additional ingredients and the DOM is updated to add these additional fields via javascript. Fourth, the shopping cart aggregates amounts of ingredients across multiple recipes that the user has saved and outputs it via a list. Finally, the core models include significantly more fields than previous projects and there are more views.
+Third, when "adding a recipe," the user can click a button to add additional ingredients and the DOM is updated to add these additional fields via javascript. Fourth, the shopping cart aggregates amounts of ingredients across multiple recipes that the user has saved and outputs it via a list. 
+
+Finally, when including a feature that we've learned about in past, I attempted to increase the amount of compexity for that feature. For example, the core models include significantly more fields than previous projects, so whereas a "post" in the social network app had a single field, a recipe has many. Another example, is ratings "extend" comments by including a title and a rating score rather than just a single comment box. Finally, the project has significantly more views and API calls than previous projects.
 
 To make the webpage mobile responsive, I am utilizing bootstrap's javascript addons and grid layout features. 
 
