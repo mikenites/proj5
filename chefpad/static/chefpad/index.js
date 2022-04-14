@@ -3,9 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#search-link').addEventListener('click',load_search);
     document.querySelector('#cart-link').addEventListener('click',load_cart);
     document.querySelector('#create-recipe-link').addEventListener('click',load_create_recipe);
-
+    generateIngredientHMTL();
     load_feed();
 });
+
+let currentIngredientField = 0;
 
 function switch_view(viewName) {
     document.querySelector('#feed-view').style.display = 'none';
@@ -29,7 +31,15 @@ function switch_view(viewName) {
         document.querySelector('#cart-recipe-list').innerHTML = "";
         document.querySelector('#cart-shopping-list').innerHTML = "";
     } else if (viewName == 'create-recipe-view') {
+        document.querySelector('#titleInput').value = "";
+        document.querySelector('#imageInput').value = "";
+        document.querySelector('#cookTimeInput').value = "";
+        document.querySelector('#prepTimeInput').value = "";
+        document.querySelector('#servingsInput').value = "";
+        document.querySelector('#descriptionTextArea').value = "";
+        document.querySelector('#instructionTextArea').value = "";
         view = document.querySelector('#create-recipe-view');
+        currentIngredientField = 0;
     } else if (viewName == 'view-recipe') {
         view = document.querySelector('#view-recipe-view');
         document.querySelector('#recipe-view-info').innerHTML = "";
@@ -195,7 +205,6 @@ function load_search() {
         let cuisineArray = [];
         let cuisineParemeter = ""; 
         let i = 0;
-        
 
         for (let cuisineCheckbox of cuisineListCheckbox) {
             let dict = {
@@ -386,7 +395,6 @@ function load_create_recipe() {
     let view = switch_view('create-recipe-view');
     let ingredientTBody = document.querySelector('#ingredient-tbody');
     let addIngBtn = document.querySelector('#add-ingredient-btn');
-    let recipeSubmitBtn = document.querySelector('#submit-recipe-btn');
 
     fetch('/cuisine/')
     .then(response => response.json())
@@ -415,34 +423,27 @@ function load_create_recipe() {
     })
 
     addIngBtn.addEventListener('click',() => {
-        fetch('/ingredient/')
-        .then(response => response.json())
-        .then(data => {
-            let newRow = document.createElement('tr');
-
-            let optionHTML = `<option value="0"> </option>`;
-
-            for (let ingredient of data) {
-                optionHTML += `<option value="${ingredient['id']}">${ingredient['name']}</option>`
-            }
-
-            newRow.innerHTML = `<td><select class="form-control" class="ingredient-select">` + optionHTML;
-            newRow.innerHTML += `</select></td><td><input type="input" class="ingredient-amount form-control"></td>`;
-            ingredientTBody.append(newRow)
-        })
+        let rowToShow = document.getElementById('ingredient-row-'+currentIngredientField)
+        rowToShow.style = "display: block"
+        currentIngredientField++
     })
+    
+    recipeSubmit();
 }
 
-function addRecipeSubmitListener(recipeSubmitBtn) {
+function recipeSubmit() {
+    let recipeSubmitBtn = document.querySelector('#submit-recipe-btn');
     recipeSubmitBtn.addEventListener('click', () => {
-    
+        
         let ingredientJson = [];
 
         let ingredientNameArray = document.getElementsByClassName('ingredient-select');
         let ingredientAmountArray = document.getElementsByClassName('ingredient-amount');
         
-        for (let ingredient of ingredientNameArray) {
-            ingredientJson.append({'id':ingredient.value,'quantity':1})
+        for (let i = 0; i < 20; i++) {
+            if (ingredientAmountArray[i].value != "") {
+                ingredientJson.push({'id' : ingredientNameArray[i].value,'quantity':ingredientAmountArray[i].value})
+            }
         }
 
         let recipeJson = {
@@ -467,5 +468,30 @@ function addRecipeSubmitListener(recipeSubmitBtn) {
             body: JSON.stringify(recipeJson)
         })
 
+    })
+}
+
+function generateIngredientHMTL() {
+    fetch('/ingredient/')
+    .then(response => response.json())
+    .then(data => {
+        let ingredientTBody = document.querySelector('#ingredient-tbody');
+
+        for (let i = 0; i < 20; i++) { 
+            let newRow = document.createElement('tr');
+            newRow.id = 'ingredient-row-' + i;
+            newRow.style = 'display:none';
+
+            let optionHTML = `<td><select class="form-control ingredient-select"><option value="0"> </option>`;
+
+            for (let ingredient of data) {
+                optionHTML += `<option value="${ingredient['id']}">${ingredient['name']}</option>`
+            }
+
+            optionHTML += `</select></td><td><input type='input' class='ingredient-amount form-control'></td></tr>`
+            newRow.innerHTML = optionHTML;
+
+            ingredientTBody.append(newRow)
+        }
     })
 }

@@ -4,6 +4,8 @@ from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication 
+from datetime import date
+
 
 from . import models
 from . import serializers
@@ -62,6 +64,9 @@ class SearchView(APIView):
 
         courseIdString = request.GET.get('courseId') or None
         cuisineIdString = request.GET.get('cuisineId') or None
+
+
+        print(courseIdString)
         
         if courseIdString:
             courseIdArray = courseIdString.split(',') 
@@ -174,5 +179,31 @@ class VewRecipe(APIView):
 class SubmitRecipeView(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     def post(self,request):
-        print(request.data)
+        cuisine = models.Cuisine.objects.get(pk=request.data['cuisine_id'])
+        mealCourse = models.MealCourse.objects.get(pk=request.data['course_id'])
+        newRecipe = models.Recipe(
+            name = request.data['name'],
+            author = self.request.user,
+            cuisine = cuisine,
+            meal_course = mealCourse,
+            description = request.data['description'],
+            image = request.data['image'],
+            instructions = request.data['instructions'],
+            prep_time = request.data['prep_time'],
+            cook_time = request.data['cook_time'],
+            servings =  request.data['servings'],
+            publish_date = date.today(),
+            is_public = True
+        )
+        newRecipe.save()
+
+        for ingredient in request.data['ingredients']:
+            ingObj = models.Ingredient.objects.get(pk=ingredient['id'])
+            newRecipeIng = models.RecipeIngredient(
+                recipe = newRecipe,
+                ingredient = ingObj,
+                quantity = ingredient['quantity']
+            )
+            newRecipeIng.save()
+
         return Response({})

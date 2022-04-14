@@ -14,7 +14,6 @@ class MealCourseSerializer(serializers.ModelSerializer):
         fields = ['id','name']
 
 class RecipeSerializer(serializers.ModelSerializer):
-
     author_name = serializers.SerializerMethodField()
 
     def get_author_name(self,obj):
