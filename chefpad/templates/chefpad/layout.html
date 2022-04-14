@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}ChefPad{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'chefpad/styles.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/">Chefpad</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" id="feed-link" href="#">Feed</a></li>
+                    <li class="nav-item"><a class="nav-link" id="search-link" href="#">Search</a></li>
+                    <li class="nav-item"><a class="nav-link" id="cart-link" href="#">Shopping Cart</a></li>
+                    <li class="nav-item"><a class="nav-link" id="create-recipe-link" href="#">Create Recipe</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="page-body">{% block body %} {% endblock %}</div>
+    </body>
+</html>

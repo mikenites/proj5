@@ -1,0 +1,181 @@
+{% extends "chefpad/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="container" id="feed-view">
+        <div class="row">
+            <h2>Recent Recipes Posted</h2>
+        </div>
+        <div class="row">
+            <div class="col" id="feed-view-port">
+            </div>
+        </div>
+    </div>
+    <div class="container" id="view-recipe-view">
+        <br />
+        <div class="card w-75">
+            <div class="card-body">
+              <h5 class="card-title" id="recipe-view-name"></h5>
+              <p class="card-text" id="recipe-view-description"></p>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <img class="card-img-top" id="recipe-view-image">
+                    </div>
+                    <div class="col-md-6" id="recipe-view-info">
+                        X
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-text" id="recipe-view-ingredients"></p>
+            </div>
+            <div class="card-body">
+                <p class="card-text" id="recipe-view-right"></p>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="search-view">
+        <div class="row">
+            <div class="col">
+                <h2>Search for Recipes</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-12" id="search-filter-wrapper">
+                <h5>Search Filters</h5>
+                <div id="search-filters">
+                    <div class="row">
+                        <div class="col">
+                            <b>Cuisine</b>
+                            <ul id="search-filter-cuisine-list">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <b>Course</b>
+                            <ul id="search-filter-course-list">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-12" id="search-result-wrapper">
+                <h5>Search Results</h5>
+                <div id="search-results">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="cart-view">
+        <div class="row" id="cart-recipe-list-wrapper">
+            <div class="col-12">
+                <h4>Recipes You Will Purchase Ingredients For</h4>
+                <div id="cart-recipe-list">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row" id="cart-shopping-list-wrapper">
+            <div class="col-12">
+                <h4>List of Ingredients</h4>
+                <div id="cart-shopping-list">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="create-recipe-view">
+        <div class="row">
+            <div class="col-12">
+                <h4>Add a New Recipe</h4>
+                <form id="new-recipe-form">
+                    <div = class="container">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label for="titleInput">Title</label>
+                                    <input type="email" class="form-control" id="titleInput" placeholder="Enter Recipe Title">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label for="imageInput">Image URL</label>
+                                    <input type="email" class="form-control" id="imageInput" placeholder="Enter Recipe Title">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg col-md-6">
+                                <div class="form-group">
+                                    <label for="cuisineSelect">Cuisine</label>
+                                    <select class="form-control" id="cuisineSelect">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg col-md-6">
+                                <div class="form-group">
+                                    <label for="courseSelect">Course</label>
+                                    <select class="form-control" id="courseSelect">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg col-md-6">
+                                <div class="form-group">
+                                    <label for="cookTimeInput">Cook Time</label>
+                                    <input type="email" class="form-control" id="cookTimeInput" placeholder="Enter Cook Time">
+                                </div>
+                            </div>
+                            <div class="col-lg col-md-6">
+                                <div class="form-group">
+                                    <label for="prepTimeInput">Prep Time</label>
+                                    <input type="email" class="form-control" id="prepTimeInput" placeholder="Enter Prep Time">
+                                </div>
+                            </div>
+                            <div class="col-lg col-md-6">
+                                <div class="form-group">
+                                    <label for="servingsInput">Servings</label>
+                                    <input type="email" class="form-control" id="servingsInput" placeholder="Enter Servings">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="descriptionTextArea">Description</label>
+                            <textarea class="form-control" id="descriptionTextArea" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="instructionTextArea">Instructions</label>
+                            <textarea class="form-control" id="instructionTextArea" rows="3"></textarea>
+                        </div>
+                        <hr />
+                        <h5>Add Ingredients</h5>
+                        <div id="ingredient-inputs">
+                        </div>
+                        <table class="table stable-striped">
+                            <thead>
+                                <tr>
+                                    <th>Ingredient</th>
+                                    <th>Amount (grams)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ingredient-tbody">
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-secondary" id="add-ingredient-btn">Add Ingredient</button>
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-primary" id="submit-recipe-btn">Submit Recipe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="{% static 'chefpad/index.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+{% endblock %}
